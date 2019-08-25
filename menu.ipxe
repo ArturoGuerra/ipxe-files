@@ -1,0 +1,45 @@
+#!ipxe
+
+cpair --foreground 7 --background 15 0
+cpair --foreground 7 --background 15 1
+cpair --foreground 6 --background 15 3
+cpair --foreground 0 --background 6 2
+
+
+:start
+chain --autofree boot.cfg ||
+goto ignore_cls
+:ignore_cls
+
+:main_menu
+clear menu
+menu iPXE ArturoNet ${version}
+item --gap Installers:
+item linux Linux
+item freebsd freeBSD
+
+item --gap Tools:
+item shell iPXE Shell
+item netinfo Netinfo
+item local Local Boot
+
+choose --default local menu || goto local
+goto ${menu} || goto change_menu
+
+:change_menu
+chain ${menu}.ipxe || goto error
+
+:error
+echo Error occured, press any key to return to menu ...
+prompt
+goto main_menu
+
+:shell
+echo Type "exit" to return to menu.
+set menu main_menu
+shell
+goto main_menu
+
+:local
+echo Booting from local machine
+exit 0

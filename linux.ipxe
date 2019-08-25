@@ -1,0 +1,24 @@
+#!ipxe
+
+:linux_menu
+clear linux_menu
+menu Linux Installers
+item ubuntu Ubuntu
+item debian Debian
+item centos CentOS
+item archlinux ArchLinux
+item coreos coreOS
+item rancheros RancherOS
+item kali Kali
+item fedora Fedora
+item
+item back Back
+
+choose distro
+iseq ${distro} back && goto back || goto choose_distro
+
+:back
+chain menu.ipxe
+
+:choose_distro
+chain ${distro}.ipxe
