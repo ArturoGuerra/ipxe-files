@@ -1,0 +1,49 @@
+#!ipxe
+
+:debian_menu
+set os Debian
+clear debian_version
+menu ${os} - ${arch_a}
+item buster ${os} 10.0 (buster)
+item stretch ${os} 9.0 (stretch)
+item jessie ${os} 8.0 (jessie)
+item
+item back Back
+choose --default ${debian_version} debian_version || goto debian_menu
+iseq ${debian_version} back && goto back || goto deb_boot_menu
+
+:back
+chain linux.ipxe
+
+:deb_boot_menu
+clear type
+menu ${os} - ${arch_a}
+item install Install
+item rescue Rescue
+item preseed Specify preseed url...
+item
+item back back
+choose --default ${type} type || goto debian_menu
+iseq ${type} back && goto debian_menu ||
+
+:deb_cfg
+clear mirror
+set mirror ${debian_mirror}/${debian_base_dir}/dists/${debian_version}/main/installer-${arch_a}/current/images/netboot
+goto deb_${type}
+
+:deb_rescue
+set install_params rescue/enable=true
+goto deb_boot
+
+:deb_preseed
+echo -n Preseed URL for ${os} ${debian_version}: && read preseedurl
+set install_params auto=true priority=critical preseed/url=${preseedurl}
+goto deb_boot
+
+:deb_install
+set mirror ${mirror}/debian-installer/${arch_a}
+set install_params ${install_params} vga=788 --- quiet
+imgfree
+kernel http://${mirror}/linux ${install_params} initrd=initrd.gz
+initrd http://${mirror}/initrd.gz
+boot

@@ -1,0 +1,39 @@
+#!ipxe
+
+:openbsd_menu
+set os OpenBSD
+clear ver
+menu OpenBSD
+item 6.5 ${os} 6.5
+item 6.4 ${os} 6.4
+item 6.3 ${os} 6.3
+item 6.2 $[os} 6.2
+item 6.1 $[os} 6.1
+item snapshots ${os} 6.4 Latest Snapshot
+item
+item back Back
+choose ver
+
+iseq ${ver} 6.5 && set image_ver 65 ||
+iseq ${ver} 6.4 && set image_ver 64 ||
+iseq ${ver} 6.3 && set image_ver 63 ||
+iseq ${ver} 6.2 && set image_ver 62 ||
+iseq ${ver} 6.1 && set image_ver 61 ||
+iseq ${ver} snapshots && set image_ver 65 ||
+
+iseq ${vesion} back && chain bsd.ipxe ||
+
+iseq ${arch} x86_64 && goto openbsd_x64 ||
+set openbsd_arch i386
+goto boot_openbsd
+
+:openbsd_x64
+set openbsd_arch amd64
+goto boot_openbsd
+
+:boot_openbsd
+set src http://ftp.openbsd.org/pub/OpenBSD/${ver}/${openbsd_arch}/cd${image_ver}.iso
+imgfree
+initrd ${src}
+chain ${memdisk} iso raw
+exit

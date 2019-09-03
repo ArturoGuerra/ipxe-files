@@ -8,11 +8,12 @@ item disco ${os} 19.04 Disco Dingo
 item bionic ${os} 18.04 LTS Bionic Beaver
 item xenial ${os} 16.04 LTS Xenial Xerus
 item
-item back
-choose --default ${ubuntu_version} ubuntu_version && goto deb_boot_menu || goto ubuntu_menu
+item back Back
+choose --default ${ubuntu_version} ubuntu_version || goto ubuntu_menu
+iseq ${ubuntu_version} back && goto back || goto deb_boot_menu
 
 :back
-goto linux.ipxe
+chain linux.ipxe
 
 :deb_boot_menu
 clear type
@@ -41,6 +42,7 @@ goto deb_boot
 
 :deb_install
 set mirror ${mirror}/ubuntu-installer/${arch_a}
+set install_params ${install_params} vga=788 --- quiet
 imgfree
 kernel http://${mirror}/linux ${install_params} initrd=initrd.gz
 initrd http://${mirror}/initrd.gz

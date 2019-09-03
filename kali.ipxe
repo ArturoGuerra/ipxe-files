@@ -1,0 +1,22 @@
+#!ipxe
+
+:kali_menu
+set os Kali Linux
+clear version
+menu ${os} - ${arch_a}
+item rolling ${os} Rolling Edition
+item
+item back Back
+choose version
+iseq ${version} back && goto back || goto deb_boot
+
+:back
+chain linux.ipxe
+
+:deb_boot
+set kali_mirror http.kali.org
+set dir /dists/kali-${version}/main/installer-${arch_a}/current/images/netboot/debian-installer/${arch_a}
+imgfree
+kernel http://${kali_mirror}/${dir}/linux vga=788 --- quiet initrd=initrd.gz
+initrd http://${kali_mirror}/${dir}/initrd.gz
+boot

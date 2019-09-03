@@ -1,0 +1,35 @@
+#!ipxe
+
+isset ${dhcp-server} || goto static_ip
+set ipparam BOOTIF=${netX/mac} ip=dhcp
+set real_archlinux_mirror ${arch_linux_mirror}
+goto arch_menu
+
+:static_ip
+nslookup real_archlinux_mirror ${archlinux_mirror}
+set ipparam BOOTIF=${netX/mac} ip=${ip}::${gateway}:${netmask}
+
+:arch_menu
+set os Arch Linux
+clear arch_version
+menu ${os} - ${arch}
+item latest Latest
+item 2019.08.01 2019.08.01
+item 2019.07.01 2019.07.01
+item 2019.06.01 2019.06.01
+item
+item back Back
+choose arch_version || goto arch_menu
+iseq ${arch_version} back && goto back || goto arch_boot
+
+:back
+chain linux.ipxe
+
+:arch_boot
+imgfree
+set dir ${archlinux_base_dir}/iso/${arch_version}
+set netboot_dir ${dir}/arch/boot
+set params initrd=archiso.img archiso_http_srv=http://${archlinux_mirror}/${dir}/ archisobasedir=arch verify=y net.ifnames=0
+kernel http://${archlinux_mirror}/${netboot_dir}/x86_64/vmlinuz ${params} initrd=archiso.img
+initrd http://${archlinux_mirror}/${netboot_dir}/x86_64/archiso.img
+boot

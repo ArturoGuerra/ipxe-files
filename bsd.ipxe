@@ -1,0 +1,11 @@
+#!ipxe
+
+:bsd_menu
+menu BSD Installers
+item openbsd OpenBSD
+item
+item menu Back
+choose menu
+
+:change_menu
+chain ${menu}.ipxe || goto bsd_menu

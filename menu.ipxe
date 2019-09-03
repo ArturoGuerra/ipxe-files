@@ -14,14 +14,18 @@ goto ignore_cls
 :main_menu
 clear menu
 menu iPXE ArturoNet ${version}
+item --gap Default:
+item local Local Boot
+item
+
 item --gap Installers:
 item linux Linux
-item freebsd freeBSD
+item bsd BSD
+item
 
 item --gap Tools:
-item shell iPXE Shell
 item netinfo Netinfo
-item local Local Boot
+item shell iPXE Shell
 
 choose --default local menu || goto local
 goto ${menu} || goto change_menu

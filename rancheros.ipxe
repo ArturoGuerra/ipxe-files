@@ -1,0 +1,21 @@
+#!ipxe
+
+:rancheros_menu
+menu RancherOS
+item bootos RancherOS Latest
+item
+item back Back
+choose version && goto ${version}
+
+:back
+chain linux.ipxe
+
+:bootos
+echo Login in with username: rancher, password: rancher
+echo To install: ros install -d /dev/sda1
+set rancher_base ${rancheros_mirror}/os/latest
+set params rancher.state.autoformat=[/dev/sda] rancher.password=rancher
+imgfree
+kernel http://${rancher_base}/vmlinuz ${params} initrd=initrd
+initrd http://${rancher_base}/initrd
+boot

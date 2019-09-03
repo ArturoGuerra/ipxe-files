@@ -1,0 +1,49 @@
+#!ipxe
+
+:centos_menu
+clear centos_version
+set os CentOS
+menu ${os} - ${arch}
+item 7 ${os} 7
+item 6 ${os} 6
+item
+item back Back
+choose centos_version || goto centos_menu
+iseq ${centos_version} back && goto back || goto centos_boot_type
+
+:back
+chain linux.ipxe
+
+:centos_boot_type
+clear type
+set osv ${os} ${centos_version}
+menu ${osv} Options
+item install ${osv} Installer
+item rescue ${osv} Rescue
+item kickstart ${osv} Kickstart
+item
+item back Back
+choose type
+iseq ${type} back && goto centos_menu || goto ${type}
+
+:install
+set params text
+goto bootos
+
+:rescue
+set params rescue
+goto bootos
+
+:kickstart
+echo -n Specify kickstart URL for ${osv}: && read ksurl
+set params ks=${ksurl}
+goto bootos
+
+:bootos
+imgfree
+set dir ${centos_base_dir}/${centos_version}/os/${arch}
+set repo http://${centos_mirror}/${dir}
+set mirror ${centos_mirror}/${dir}/images/pxeboot
+kernel http://${mirror}/vmlinuz repo=${repo} ${params} initrd=initrd.img
+initrd http://${mirror}/initrd.img
+boot

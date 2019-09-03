@@ -4,21 +4,15 @@
 clear linux_menu
 menu Linux Installers
 item ubuntu Ubuntu
+item archlinux ArchLinux
+item alpinelinux AlpineLinux
 item debian Debian
 item centos CentOS
-item archlinux ArchLinux
-item coreos coreOS
 item rancheros RancherOS
 item kali Kali
-item fedora Fedora
 item
-item back Back
-
-choose distro
-iseq ${distro} back && goto back || goto choose_distro
-
-:back
-chain menu.ipxe
+item menu Back
+choose distro && goto choose_distro
 
 :choose_distro
 chain ${distro}.ipxe
