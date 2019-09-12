@@ -34,7 +34,7 @@ menu ${ova} boot type
 item install ${ova} Install
 item rescue ${ova} Rescue
 item kickstart ${ova} Kickstart url
-choose bt && goto bt ||
+choose bt && goto ${bt} ||
 
 :rescue
 set params rescue && goto install
