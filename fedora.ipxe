@@ -1,0 +1,51 @@
+#!ipxe
+
+# Fedora OS
+# https://getfedora.org
+
+isset ${dhcp-server} && set ipparam ip=dhcp || set ipparam ip=${ip}::${gateway}:${netmask}:::none:${dns}
+set ipparam BOOTIF=${netX/mac} ${ipparam}
+
+:fedora
+clear osversion
+set os Fedora
+menu Fedora - ${arch}
+item 30 ${os} 30
+item 29 ${os} 29
+item 28 ${os} 28
+choose osversion
+set ova ${os} ${osversion}
+goto sku_menu
+
+:sku_menu
+clear ossku
+clear dir
+menu ${os} ${arch} sku
+item Everything ${ova} Everything
+item Server ${ova} Server
+item Workstation ${ova} Workstation
+choose ossku
+set dir ${fedora_base_dir}/releases/${osversion}/${ossku}/${arch}/os
+goto boottype
+
+:boottype
+clear bt
+menu ${ova} boot type
+item install ${ova} Install
+item rescue ${ova} Rescue
+item kickstart ${ova} Kickstart url
+choose bt && goto bt ||
+
+:rescue
+set params rescue && goto install
+
+:kickstart
+echo -n Specify kickstart URL for ${os} ${osversion}: && read ksurl
+set params = ks=${ksurl}
+goto install
+
+:install
+imgfree
+kernel http://${fedora_mirror}/${dir}/images/pxeboot/vmlinuz repo=http://${fedora_mirror}/${dir} ${params} {ipparams} initrd=initrd.img
+initrd http://${fedora_mirror}/${dir}/images/pxeboot/initrd.img
+boot
