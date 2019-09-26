@@ -1,0 +1,49 @@
+#!ipxe
+
+# Utils like clonezilla
+
+menu Utilities
+item --gap Disk Management:
+item clonezilla Clonezilla
+item dban DBAN
+item gparted GParted
+item
+item --gap Recovery:
+item alt_linux_rescue ALT Linux Rescue
+
+choose util
+goto ${util}
+
+
+:clonezilla
+set clonezilla_version 2.6.2-15
+set util_path master.dl.sourceforge.net/project/clonezilla/clonezilla_live_stable/${clonezilla_version}/clonezilla-live-${clonezilla_version}-amd64.iso
+set util_file clonezilla-live-${clonezilla_version}-amd64.iso
+goto memdisk_boot
+
+
+:dban
+set dban_version 2.3.0
+set util_path master.dl.sourceforge.net/project/dban/dban/dban-${dban_version}/dban-${dban_version}_i586.iso
+set util_file dban-${dban_version}_i586.iso
+goto memdisk_boot
+
+
+:gparted
+set gparted_version 1.0.0-3
+set util_path master.dl.sourceforge.net/project/gparted/gparted-live-stable/${gparted_version}/gparted-live-${gparted_version}-amd64.iso
+set util_file gparted-live-${gparted_version}-amd64.iso
+goto memdisk_boot
+
+:alt_linux_rescue
+iseq ${arch} x86_64 && set altl_arch ${arch} || set altl_arch i586
+set util_path nightly.altlinux.org/p8/release/alt-p8-rescue-20180312-${altl_arch}.iso
+set util_file alt-p8-rescue-20180312-${altl_arch}.iso
+goto memdisk_boot
+
+
+:memdisk_boot
+imgfree
+kernel ${memdisk} iso raw
+initrd --name ${util_file} http://${util_path}
+boot

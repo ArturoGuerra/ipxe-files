@@ -24,6 +24,7 @@ item bsd BSD
 item
 
 item --gap Tools:
+item utilities Utilities
 item netinfo Netinfo
 item shell iPXE Shell
 
