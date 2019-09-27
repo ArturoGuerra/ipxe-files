@@ -4,8 +4,8 @@
 clear centos_version
 set os CentOS
 menu ${os} - ${arch}
+item 8 ${os} 8
 item 7 ${os} 7
-item 6 ${os} 6
 item
 item back Back
 choose centos_version || goto centos_menu
