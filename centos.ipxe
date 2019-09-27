@@ -1,5 +1,8 @@
 #!ipxe
 
+isset ${dhcp-server} && set ipparam ip=dhcp || set ipparam ip=${ip}::${gateway}:${netmask}:::none:${dns}
+set ipparam BOOTIF=${netX/mac} ${ipparam}
+
 :centos_menu
 clear centos_version
 set os CentOS
@@ -46,6 +49,6 @@ goto bootos
 imgfree
 set repo http://${centos_mirror}/${dir}
 set mirror ${centos_mirror}/${dir}/images/pxeboot
-kernel http://${mirror}/vmlinuz repo=${repo} ${params} initrd=initrd.img
+kernel http://${mirror}/vmlinuz repo=${repo} ${params} ${ipparam} initrd=initrd.img
 initrd http://${mirror}/initrd.img
 boot
