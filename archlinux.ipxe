@@ -29,7 +29,7 @@ chain linux.ipxe
 imgfree
 set dir ${archlinux_base_dir}/iso/${arch_version}
 set netboot_dir ${dir}/arch/boot
-set params initrd=archiso.img archiso_http_srv=http://${archlinux_mirror}/${dir}/ archisobasedir=arch verify=y net.ifnames=0
+set params initrd=archiso.img archiso_http_srv=http://${real_archlinux_mirror}/${dir}/ archisobasedir=arch verify=y ${ipparam} net.ifnames=0
 kernel http://${archlinux_mirror}/${netboot_dir}/x86_64/vmlinuz ${params} initrd=archiso.img
 initrd http://${archlinux_mirror}/${netboot_dir}/x86_64/archiso.img
 boot
