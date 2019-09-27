@@ -2,7 +2,7 @@
 
 isset ${dhcp-server} || goto static_ip
 set ipparam BOOTIF=${netX/mac} ip=dhcp
-set real_archlinux_mirror ${arch_linux_mirror}
+set real_archlinux_mirror ${archlinux_mirror}
 goto arch_menu
 
 :static_ip
