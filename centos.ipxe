@@ -10,8 +10,9 @@ item
 item back Back
 choose centos_version || goto centos_menu
 set dir ${centos_base_dir}/${centos_version}/BaseOS/${arch}/os
-iseq ${centos_version} 7 && set dir ${centos_base_dir}/${centos_version}/os/${arch}
-iseq ${centos_version} back && goto back || goto centos_boot_type
+iseq ${centos_version} 7 && set dir ${centos_base_dir}/${centos_version}/os/${arch} ||
+iseq ${centos_version} back && goto back ||
+goto centos_boot_type
 
 :back
 chain linux.ipxe
